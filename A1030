@@ -1,0 +1,94 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+const int maxn = 510;
+const int INF = 999999999;
+int n, m, s, d;
+int G[maxn][maxn] = {0};
+int C[maxn][maxn] = {0};
+bool visited[maxn] = {false};
+int totaldis = INF, totalcost = INF;
+int dis[maxn] = {0};
+vector<int> pre[maxn];
+void Dijkstra(int s){
+	fill(dis, dis + maxn, INF);
+	fill(visited, visited + maxn, false);
+	dis[s] = 0;
+	for(int i = 0; i < n; i++){
+		int u = -1, min = INF;
+		for(int j = 0; j < n; j++){
+			if(dis[j] < min && visited[j] == false)
+			{
+				min = dis[j];
+				u = j;
+			}
+		}
+		if(u == -1) return;
+		visited[u] = true;
+		for(int i = 0; i < n; i++){
+			if(visited[i] == false){
+				if(dis[i] > dis[u] + G[u][i]){
+					dis[i] = dis[u] + G[u][i];
+					pre[i].clear();
+					pre[i].push_back(u);
+				}
+				else if(dis[i] == dis[u] + G[u][i]){
+					pre[i].push_back(u);
+				}
+			}
+		}
+	}
+}
+vector<int> temppath, path;
+void DFS(int d){
+	if(d == s){
+		temppath.push_back(d);
+		int tempcost = 0;
+		for(int i = temppath.size() - 1; i > 0; i--){
+			int a = temppath[i], b = temppath[i-1];
+			tempcost += C[a][b];
+		}
+		if(tempcost < totalcost){
+			path = temppath;
+			totalcost = tempcost;
+		}
+		temppath.pop_back();
+		return;
+	}
+	temppath.push_back(d);
+	for(int i = 0; i < pre[d].size(); i++){
+		DFS(pre[d][i]);
+	}
+	temppath.pop_back();
+}
+
+int main() {
+	fill(G[0], G[0] + maxn * maxn, INF);
+	fill(visited, visited + maxn, false);
+	scanf("%d%d%d%d", &n, &m, &s, &d);
+	for(int i = 0; i < m; i++){
+		int u, v, dis, cost;
+		scanf("%d%d%d%d", &u, &v, &dis, &cost);
+		G[u][v] = G[v][u] = dis;
+		C[u][v] = C[v][u] = cost;
+	}
+	Dijkstra(s);
+	DFS(d);
+	for(int i = path.size() - 1; i >= 0; i--){
+		printf("%d ", path[i]);
+	}
+	printf("%d %d\n", dis[d], totalcost); 
+	return 0;
+}
