@@ -1,0 +1,72 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+int n, k;
+struct node{
+	string id;
+	int grade, rank, finalrank, target;
+	node(string id, int grade, int target){
+		this->id = id;
+		this->grade = grade;
+		this->target = target;
+	}
+	node(string id, int grade, int target,int rank){
+		this->id = id;
+		this->grade = grade;
+		this->target = target;
+		this->rank = rank;
+	}
+};
+bool cmp(node a, node b){
+	if(a.grade != b.grade)  return a.grade > b.grade;
+	else return a.id < b.id;
+}
+vector<node> ans;
+int main(){
+	scanf("%d", &n);
+	for(int target = 1; target <= n; target++){
+		scanf("%d", &k);
+		vector<node> v;
+		for(int i = 0; i < k; i++){
+			string s; 
+			int grade;
+			cin >> s >> grade;
+			v.push_back(node(s, grade, target));
+		}
+		sort(v.begin(), v.end(), cmp);
+		v[0].rank = 1;
+		for(int i = 1; i < k; i++){
+			v[i].rank = i+1;
+			if(v[i].grade == v[i-1].grade)
+				v[i].rank = v[i-1].rank;
+		}
+		for(int i = 0; i < k; i++){
+			ans.push_back(node(v[i].id, v[i].grade, v[i].target, v[i].rank));
+		}
+	}
+	sort(ans.begin(), ans.end(), cmp);
+	ans[0].finalrank = 1;
+	for(int i = 1; i < ans.size(); i++){
+		ans[i].finalrank = i+1;
+		if(ans[i].grade == ans[i-1].grade)
+			ans[i].finalrank = ans[i-1].finalrank;
+	}
+	printf("%d\n", ans.size());
+	for(int i = 0; i < ans.size(); i++){
+		cout << ans[i].id;
+		printf(" %d %d %d\n", ans[i].finalrank, ans[i].target, ans[i].rank);
+	}
+	return 0;
+}
