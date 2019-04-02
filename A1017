@@ -1,0 +1,63 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+const int deadline = 61200;
+int n, k, h, m, s, Time;
+int getTime(int h, int m, int s){
+	return h * 3600 + m * 60 + s;
+}
+struct node{
+	int poptime;
+	node(){
+		poptime = 28800;
+	}
+};
+struct node1{
+	int come, deal;
+	node1(int come, int deal){
+		this->come = come;
+		this->deal = deal;
+	}
+};
+bool cmp(node1 a, node1 b){
+	return a.come < b.come;
+}
+int totaltime = 0, num = 0;
+int main(){
+	scanf("%d%d", &n, &k);
+	vector<node> window(k);
+	vector<node1> customer;
+	for(int i = 0; i < n; i++){
+		scanf("%d:%d:%d %d", &h, &m, &s, &Time);
+		int temp = getTime(h, m, s);
+		Time *= 60;
+		if(temp <= deadline) {
+			customer.push_back(node1(temp, Time));
+		}
+	}
+	sort(customer.begin(), customer.end(), cmp);
+	num = customer.size();
+	if(num == 0) {
+		printf("0.0\n");
+		return 0;
+	}
+	for(int i = 0; i < num; i++){
+		int min = 999999999, low = 0;
+		for (int j = 0; j < k; j++){
+			if(min > window[j].poptime){
+				min = window[j].poptime;
+				low = j;
+			}
+		}
+		if(customer[i].come < window[low].poptime){
+			totaltime += window[low].poptime - customer[i].come;
+		}
+		window[low].poptime = max(window[low].poptime + customer[i].deal, customer[i].come + customer[i].deal);
+	}
+	double ans = totaltime * 1.0 / num / 60;
+	printf("%.1f\n", ans);
+	return 0;
+}
