@@ -1,0 +1,33 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+using namespace std;
+int main(){
+	string s;
+	cin >> s;
+	int len = s.length();
+	int h = (len + 2)/3;
+	vector<string> v(h);
+	int temp = len - 2 * h;
+	int i;
+	for(i = 0; i < h-1; i++){
+		v[i] += s[i];
+		for(int j = 0; j < temp; j++){
+			v[i] += " ";
+		}
+		v[i] += s[len - i - 1];
+	}
+	int temp2 = temp + 2;
+	for( int j = 0; j < temp2; j++){
+		v[h-1] += s[i];
+		i++;
+	}
+	for(int j = 0; j < h; j++){
+		cout << v[j] << endl;
+	}
+	return 0;
+
+}
