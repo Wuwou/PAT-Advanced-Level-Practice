@@ -1,0 +1,68 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+int n, m, now, id;
+char level[4] = {'A','C', 'M', 'E'};
+//acme
+struct node{
+	int id;
+	int grade[4];
+	int rank[4];
+};
+int exist[1000001] = {0};
+vector<node> v; 
+bool cmp(node a, node b){
+	return a.grade[now] > b.grade[now];
+}
+
+int main(){
+	//freopen("input.txt", "r", stdin);
+	scanf("%d%d", &n, &m);
+	v.resize(n);
+	for(int i = 0; i < n; i++){
+		scanf("%d %d %d %d", &v[i].id, &v[i].grade[1], &v[i].grade[2], &v[i].grade[3]);
+		v[i].grade[0] = v[i].grade[1] + v[i].grade[2] + v[i].grade[3];
+		exist[v[i].id] = i + 1;//v中存放的位置
+	}
+	for(now = 0; now < 4; now++){
+		sort(v.begin(), v.end(), cmp);
+		v[0].rank[now] = 1;
+		for(int i = 1; i < n; i++){
+			v[i].rank[now] = i + 1;
+			if(v[i].grade[now] == v[i-1].grade[now])
+				v[i].rank[now] = v[i - 1].rank[now];
+		}
+	}
+	for(int i = 0; i < n; i++){
+		int pq = v[i].id;
+		exist[pq] = i+1;
+	}
+	while(m--){
+		scanf("%d", &id);
+		if(exist[id] == 0) {
+			printf("N/A\n");
+		}
+		else{
+			int k = 0;
+			int low = exist[id] - 1;
+			for(int j = 0; j < 4; j++){
+				if(v[low].rank[j] < v[low].rank[k])
+					k = j;
+			}
+			printf("%d %c\n", v[low].rank[k], level[k]);
+		}
+	}
+	return 0;
+}
