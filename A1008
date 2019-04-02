@@ -1,0 +1,18 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+int main(){
+	int n, temp, sum = 0, v = 0;
+	scanf("%d", &n);
+	for(int i = 0; i < n; i++){
+		scanf("%d", &temp);
+		if(v > temp) sum += (v - temp) * 4;
+		else sum += (temp - v) * 6;
+		v = temp;
+	}
+	sum += 5 * n;
+	printf("%d\n", sum);
+	return 0;
+}
