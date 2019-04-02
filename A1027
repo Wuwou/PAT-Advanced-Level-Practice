@@ -1,0 +1,22 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+using namespace std;
+string ch[13] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C"};
+string Get(int x){
+	int a = x /13;
+	int b = x % 13;
+	string s = ch[a] + ch[b];
+	return s;
+}
+int main(){
+	int a, b, c;
+	scanf("%d%d%d", &a, &b, &c);
+	string ans = "#";
+	ans += Get(a)+ Get(b) + Get(c);
+	cout << ans << endl;
+	return 0;
+}
