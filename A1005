@@ -1,0 +1,49 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+using namespace std;
+struct node{
+	int in, out;
+	node(){
+		this->in = 86400; 
+		this->out = -1;
+	}
+};
+int n;
+int getTime(int h, int m, int s){
+	return h * 3600 + m * 60 + s;
+}
+int main(){
+	scanf("%d", &n);
+	map<string, node> mp;
+	for(int i = 0; i < n; i++){
+		string id;
+		int h, m, s;
+		cin >> id;
+		scanf("%d:%d:%d", &h, &m, &s);
+		int time = getTime(h,m,s);
+		if(mp[id].in > time)  mp[id].in = time;
+		scanf("%d:%d:%d", &h, &m, &s);
+		time = getTime(h,m,s);
+		if(mp[id].out < time)  mp[id].out = time;
+	}
+	int intime = 86400, outtime = -1;
+	string s1, s2;
+	for(auto it = mp.begin(); it != mp.end(); it++){
+		if(intime > it->second.in){
+			intime = it->second.in;
+			s1 = it->first;
+		}
+		if(outtime < it->second.out){
+			outtime = it->second.out;
+			s2 = it->first;
+		}
+	}
+	cout << s1 << " " << s2 << endl;
+	return 0;
+}
