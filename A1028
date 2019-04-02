@@ -1,0 +1,62 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+struct node{
+	int id;
+	char name[10];
+	int grade;
+	node(int id, char name[10], int grade){
+		this->id = id;
+		for(int i = 0; i < 10; i++){
+			this->name[i] = name[i];
+		}
+		this->grade = grade;
+	}
+};
+vector<node> v;
+int n, c;
+bool cmp1(node &a, node &b){
+	return a.id < b.id;
+}
+bool cmp2(node &a, node &b){
+	int s = strcmp(a.name, b.name);
+	if(s != 0) return s < 0;  
+	else return a.id < b.id;
+}
+bool cmp3(node &a, node &b){
+	if(a.grade != b.grade) return a.grade < b.grade;
+	else return a.id < b.id;
+}
+
+int main(){
+	scanf("%d%d", &n, &c);
+	for(int i = 0; i < n; i++){
+		char name[10];
+		int id, grade;
+		scanf("%d%s%d", &id, name, &grade);
+		v.push_back(node(id, name, grade));
+	}
+	if(c == 1)
+		sort(v.begin(), v.end(), cmp1);
+	else if(c == 2)
+		sort(v.begin(), v.end(), cmp2);
+	else 
+		sort(v.begin(), v.end(), cmp3);
+	for(int i = 0; i < n; i++){
+		printf("%06d %s %d\n", v[i].id, v[i].name, v[i].grade);
+
+	}
+	return 0;
+}
