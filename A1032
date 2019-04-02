@@ -1,0 +1,40 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+using namespace std;
+struct Node{
+	bool flag;
+	int next;
+	char c;
+}node[100000];
+int main(){
+	int s1, s2, n;
+	scanf("%d%d%d", &s1, &s2, &n);
+	for(int i = 0; i < n; i++){
+		int a, b;
+		char ch;
+		scanf("%d %c %d", &a, &ch, &b);
+		node[a].c = ch;
+		node[a].flag = false;
+		node[a].next = b;
+	}
+	while(s1 != -1){
+		node[s1].flag = true;
+		s1 = node[s1].next;
+	}
+	int ans = -2;
+	while(s2 != -1){
+		if(node[s2].flag == true){
+			ans = s2;
+			break;
+		}
+		s2 = node[s2].next;
+	}
+	if(ans == -2) printf("-1\n");
+	else printf("%05d\n", ans);
+	return 0;
+}
