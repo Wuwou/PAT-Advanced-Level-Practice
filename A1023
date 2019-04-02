@@ -1,0 +1,54 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+using namespace std;
+int main(){
+	string s1, s2;
+	cin >> s1;
+	s2 = s1;
+	reverse(s2.begin(), s2.end());
+	int cherry = 0;
+	for(int i = 0; i < s2.length(); i++){
+		int temp = (s2[i] - '0') * 2 + cherry;
+		cherry = temp / 10;
+		temp %= 10;
+		s2[i] = temp + '0';
+	}
+	if(cherry != 0){
+		s2 += cherry + '0';
+	}
+	reverse(s2.begin(), s2.end());
+	if(s2.length() != s1.length()){
+		printf("No\n");
+		cout << s2 << endl;
+	}
+	else{
+		map<char, int> mp1, mp2;
+		for(int i = 0; i < s1.length(); i++){
+			char c1 = s1[i], c2 = s2[i];
+			mp1[c1]++;
+			mp2[c2]++;
+		}
+		if(mp1.size() != mp2.size()){
+			printf("No\n");
+			cout << s2 << endl;
+		}
+		else{
+			for(auto it1 = mp1.begin(), it2 = mp2.begin(); it1 != mp1.end(), it2 != mp2.end(); it1++, it2++){
+				if(it1->first != it2->first || it1->second != it2->second){
+					printf("No\n");
+					cout << s2 << endl;
+					return 0;
+				}
+			}
+			printf("Yes\n");
+			cout << s2 << endl;
+		}
+	}
+	return 0;
+}
