@@ -1,0 +1,72 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+struct node{
+	string id, password;
+	node(string id, string password){
+		this->id = id;
+		this->password = password;
+	}
+};
+
+bool Judge(string &s){
+	bool flag = false;
+	for(int i = 0; i < s.length(); i++){
+		if(s[i] == '1') {
+			flag = true;
+			s[i] = '@';
+		}
+		else if(s[i] == 'l'){
+			flag = true;
+			s[i] = 'L';
+		}
+		else if(s[i] == '0'){
+			flag = true;
+			s[i] = '%';
+		}
+		else if(s[i] == 'O'){
+			flag = true;
+			s[i] = 'o';
+		}
+	}
+	return flag;
+}
+int main(){
+	int n, sum = 0;
+	scanf("%d", &n);
+	vector<node> ans;
+	for(int i = 0; i < n; i++){
+		string s1, s2;
+		cin >> s1 >> s2;
+		bool flag = Judge(s2);
+		if(flag == true)
+		{
+			sum++;
+			ans.push_back(node(s1, s2));
+		}
+	}
+	if(sum > 0)
+	{
+		printf("%d\n", sum);
+		for(int i = 0; i < ans.size(); i++){
+			cout << ans[i].id << " " << ans[i].password << endl;
+		}
+	}
+	else {
+		if(n == 1)  printf("There is 1 account and no account is modified\n");
+		else printf("There are %d accounts and no account is modified\n", n);
+	}
+	return 0; 
+}
