@@ -1,0 +1,92 @@
+#include<cstdio>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+char str1[12],str2[12];
+long long n,m=1;
+int get_min_rad(int len,char *str){
+    int num,min_rad=1;
+    for(int i=0;i<len;i++){
+        num=str[i]<'a'?str[i]-'0':str[i]-'a'+10;
+        min_rad=max(num+1,min_rad);
+    }
+    return min_rad;
+}
+long long get_N1(int len,char *str,long long radix){
+    //printf("radix=%lld\n",radix);
+    long long num=0;
+    int t;
+    num=str[0]<'a'?str[0]-'0':str[0]-'a'+10;
+    for(int i=1;i<len;i++){
+        t=str[i]<'a'?str[i]-'0':str[i]-'a'+10;
+        if(num>(m-t)/radix)//已经大于，直接返回，可以避免溢出
+            return n+1;
+        num=num*radix+t;
+    }
+    return num;
+}
+long long search(int len,char *str,long long left,long long right){
+    long long mid,num=0;
+    //printf("%n==lld\n",n);
+    while(left<=right){
+        mid=left+(right-left)/2;
+        num=get_N1(len,str,mid);
+        //printf("%num==lld\n",num);
+        if(num==n){
+            return mid;
+        }
+        else if(num>n){
+            right=mid-1;
+        }
+        else{
+            left=mid+1;
+        }
+    }
+    return -1;
+}
+long long solve(int len,char *str){
+    int min_rad=get_min_rad(len,str);
+    long long ans=search(len,str,min_rad,n+1);
+    if(ans>0&&len==1)
+        ans=min_rad;
+    return ans;
+}
+int main(){
+    //freopen("in.txt","r",stdin);
+    int tag,radix;
+    scanf("%s%s%d%d",str1,str2,&tag,&radix);
+    int len1,len2,min_rad=1;
+    long long ans;
+    len1=strlen(str1);
+    len2=strlen(str2);
+    m=(m<<63)-1;
+    if(tag==1){
+        min_rad=get_min_rad(len1,str1);
+        if(radix<min_rad){
+            ans=-1;
+        }
+        else{
+            n=get_N1(len1,str1,radix);
+            m=n;
+            ans=solve(len2,str2);
+        }
+    }
+    else{
+        min_rad=get_min_rad(len2,str2);
+        if(radix<min_rad){
+            ans=-1;
+        }
+        else{
+            n=get_N1(len2,str2,radix);
+            m=n;
+            ans=solve(len1,str1);
+        }
+    }
+    if(ans>0){
+        printf("%lld\n",ans);//ans可能是long long
+    }
+    else{
+        printf("Impossible\n");
+    }
+    return 0;
+}
