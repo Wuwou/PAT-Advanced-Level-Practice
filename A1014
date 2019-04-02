@@ -1,0 +1,71 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+const int deadline = 1020;
+int n, m, k, q;
+
+struct Node{
+	int sum, poptime;
+	queue<int> cus;
+	Node(){
+		this->poptime = 480;
+		this->sum = 480;;
+	}
+}window[21];
+int customer[1010] = {0};
+int main(){
+	scanf("%d%d%d%d", &n, &m, &k, &q);
+	vector<int> process(k + 1);
+	for(int i = 1; i <= k; i++){
+		scanf("%d", &process[i]);
+	}
+	int index = 1;
+	for(int i = 0; i < min(n * m, k); i++){
+		window[i % n].cus.push(process[index]);
+		window[i % n].sum += process[index];
+		if(i < n) {
+			window[i].poptime = window[i].sum;
+		}
+		customer[index] = window[i % n].sum;
+		index++;
+	}
+	for(; index <= k; ){
+		int min = window[0].poptime, low = 0;
+		for(int i = 0; i < n; i++){
+			if(window[i].poptime < min){
+				min = window[i].poptime;
+				low = i;
+			}
+		}
+		int temp = window[low].cus.front();
+		window[low].cus.pop();
+		window[low].poptime +=  window[low].cus.front();
+		window[low].sum = window[low].sum + process[index];
+		customer[index] = window[low].sum;
+		window[low].cus.push(index);
+		index++; 
+	}
+	for (int i = 0; i < q; i++){
+		int query;
+		scanf("%d", &query);
+		int ans = customer[query];
+		if(ans - process[query] >= deadline){
+			printf("Sorry\n");
+		}
+		else{
+			printf("%02d:%02d\n", ans/60, ans%60);
+		}
+	}
+	return 0;
+}
