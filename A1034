@@ -1,0 +1,107 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+int n, k;
+struct node{
+	string s;
+	int t;
+	node(string s, int t){
+		this->s = s;
+		this->t = t;
+	}
+};
+struct node2{
+	int num;
+	string s;
+	node2(string s, int num){
+		this->num = num;
+		this->s = s;
+	}
+};
+map<string, map<string, int>> mp;
+map<string, int> total;
+map<string, int > visited;
+vector<string> ans;
+vector<node2> ultimate;
+int Search(string s){
+	int cost = 0;
+	queue<string> q;
+	q.push(s);
+	while(!q.empty()){
+		string temp = q.front();
+		visited[temp] = 1;
+		ans.push_back(temp);
+		q.pop();
+		for(auto it = mp[temp].begin(); it != mp[temp].end(); it++){
+			string s1 = it->first;
+			int tempcost = it->second;
+			cost += tempcost;
+			if(visited[s1] == 0){
+				visited[s1] = 1;
+				q.push(s1);
+			}
+		}
+	}
+	return cost;
+}
+bool cmp(node2 a, node2 b){
+	return a.s < b.s;
+}
+string Find(){
+	int max = 0;
+	string result;
+	for(int i = 0; i < ans.size(); i++){
+		if(total[ans[i]] > max)
+		{
+			result = ans[i];
+			max = total[ans[i]];
+		}
+	}
+	return result;
+}
+int main(){
+	scanf("%d%d", &n, &k);
+	for(int i = 0; i < n; i++){
+		getchar();
+		string a, b;
+		int weight;
+		cin >> a >> b >> weight;
+		visited[a] = visited[b] = 0;
+		mp[a][b] += weight;
+		mp[b][a] += weight;
+		total[a] += weight;
+		total[b] += weight;
+	}
+	for(auto it = mp.begin(); it != mp.end(); it++){
+		string s = it->first;
+		if(visited[s] == 0){
+			ans.clear();
+			int cost = Search(s);
+			if(ans.size() > 2 && cost > k * 2){
+				string gang = Find();
+				ultimate.push_back(node2(gang, ans.size()));
+			}
+		}
+	}
+	int kk = ultimate.size();
+	printf("%d\n", kk);
+	if(kk != 0){
+		sort(ultimate.begin(), ultimate.end(), cmp);
+		for(int i = 0; i < kk; i++){
+			printf("%s %d\n", ultimate[i].s.c_str(), ultimate[i].num);
+		}
+	}
+	return 0;
+}
