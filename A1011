@@ -1,0 +1,27 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+char ch[3] = {'W', 'T','L'};
+double rate = 1;
+int main(){
+	for(int i = 0; i < 3; i++){
+		vector<double> ans(3);
+		double max = -1;
+		int low = 0;
+		for(int j = 0; j  <3; j++){
+			scanf("%lf", &ans[j]);
+			if(max < ans[j]) {
+				max = ans[j];
+				low = j;
+			}
+		}
+		rate = rate * max;
+		printf("%c ", ch[low]);
+	}
+	double kk = (rate * 0.65 - 1) * 2;
+	printf("%.2f", kk);
+	return 0;
+}
