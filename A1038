@@ -1,0 +1,77 @@
+/*给定一组数字段，您应该从它们中恢复最小的数字。
+例如，给定{32,321,3214,0229,87}，我们可以针对不同的组合顺序恢复许多数字，
+例如32-321-3214-0229-87或0229-32-87-321-3214。
+这些段，最小的数字是0229-321-3214-32-87。
+*/
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+//a小，返回-1，a大，返回1
+int Judge(string a, string b){
+	if(a.length() > b.length()){
+		int low = 0;
+		while(a.length() >= b.length())
+		{
+			string str = a.substr(0, b.length());
+			if(str > b) return 1;
+			else if(str < b) return -1;
+			else a.erase(0,b.length());
+		}
+		if(a.length() == 0) return 1;
+		else {
+			if(a > b) return 1;
+			else return -1;
+		}
+	}
+}
+
+bool cmp(string a, string b){
+	if(a.length() == b.length())
+		return a < b;
+	else if(a.length() > b.length()){
+		int temp = Judge(a, b);
+		return temp < 0;
+	}
+	else{
+		int temp = Judge(b, a);
+		return temp > 0;
+	}
+}
+int main() {
+	int n;
+	scanf("%d", &n);
+	vector<string> v;
+	for(int i = 0; i < n; i++){
+		string s;
+		cin >> s;
+		v.push_back(s);
+	}
+	sort(v.begin(), v.end(), cmp);
+	string ans;
+	for(int i = 0; i < v.size(); i++){
+		ans += v[i];
+	}
+	int kk = 0;
+	for(int i = 0; i < ans.length(); i++){
+		if(ans[i] != '0')
+			break;
+		else {
+			kk++;
+		}
+	}
+	ans.erase(0, kk);
+	if(ans.length() == 0)  cout << "0" << endl;
+	else  cout << ans <<endl;
+	return 0;
+}
