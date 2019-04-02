@@ -1,0 +1,71 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+using namespace std;
+const int maxn = 510;
+const int INF = 999999999;
+int n, m, s, e;
+int rescue[maxn] = {0};
+int G[maxn][maxn];
+vector<int> temppath;
+bool visited[maxn] = {false};
+int road = 0, mincost = INF, maxrescue = 0;
+void DFS(int s, int e){
+	if(s == e)
+	{
+		temppath.push_back(s);
+		int tempcost = 0;
+		int temprescue = rescue[temppath[0]];
+		for(int i = 1; i < temppath.size(); i++){
+			tempcost += G[temppath[i-1]][temppath[i]];
+			temprescue += rescue[temppath[i]];
+		}
+		if(tempcost < mincost){
+			road = 1;
+			mincost = tempcost;
+			maxrescue = temprescue;
+		}
+		else if(tempcost == mincost){
+			road++;
+			if(temprescue > maxrescue)  maxrescue = temprescue;
+		}
+		temppath.pop_back();
+		return;
+	}
+	temppath.push_back(s);
+	visited[s] = true;
+	for(int i = 0; i < n; i++){
+		if(visited[i] == false && G[s][i] != INF){
+			DFS(i, e);
+		}
+	}
+	temppath.pop_back();
+	visited[s] = false;
+}
+int main(){
+	//freopen("input.txt", "r", stdin);
+	fill(G[0], G[0] + maxn * maxn, INF);
+	scanf("%d %d %d %d", &n, &m, &s, &e);
+	for (int i = 0; i < n; i++){
+		scanf("%d", &rescue[i]);
+	}
+	for(int i = 0; i < m; i++){
+		int c1, c2, L;
+		scanf("%d %d %d", &c1, &c2, &L);
+		G[c1][c2] = G[c2][c1] = L;
+	}
+	DFS(s, e);
+	printf("%d %d\n",road, maxrescue);
+	return 0;
+}
+
+
