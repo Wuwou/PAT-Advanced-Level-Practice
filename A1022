@@ -1,0 +1,114 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+struct node{
+	int id;
+	string name, author, key, pub, year;
+};
+int n, m;
+unordered_map<string, vector<int> >mp1, mp2, mp3, mp4, mp5;
+
+int main(){
+	scanf("%d", &n);
+	vector<node> v(n);
+	for(int i = 0; i < n; i++){
+		int id;
+		scanf("%d", &id);
+		v[i].id = id;
+		getchar();
+		getline(cin, v[i].name);
+		getline(cin, v[i].author);
+		getline(cin, v[i].key);
+		getline(cin, v[i].pub);
+		getline(cin, v[i].year);
+		mp1[v[i].name].push_back(id);
+		mp2[v[i].author].push_back(id);
+		mp4[v[i].pub].push_back(id);
+		mp5[v[i].year].push_back(id);
+		string temp;
+		for(int j = 0; j < v[i].key.length(); j++){
+			if(v[i].key[j] == ' '){
+				mp3[temp].push_back(id);
+				temp = "";
+			}
+			else temp += v[i].key[j];
+		}
+		mp3[temp].push_back(id);
+	}
+	scanf("%d", &m);
+	while(m--){
+		int flag;
+		string temp;
+		scanf("%d: ", &flag);
+		getline(cin, temp);
+		printf("%d: %s\n", flag, temp.c_str());
+		if(flag == 1){
+			if(mp1[temp].size() == 0){
+				cout << "Not Found\n";
+			}
+			else{
+				sort(mp1[temp].begin(), mp1[temp].end());
+				for(int i = 0; i < mp1[temp].size(); i++){
+					printf("%07d\n", mp1[temp][i]);
+				}
+			}
+		}
+		if(flag == 2){
+			if(mp2[temp].size() == 0){
+				cout << "Not Found\n";
+			}
+			else{
+				sort(mp2[temp].begin(), mp2[temp].end());
+				for(int i = 0; i < mp2[temp].size(); i++){
+					printf("%07d\n", mp2[temp][i]);
+				}
+			}
+		}
+		if(flag == 3){
+			if(mp3[temp].size() == 0){
+				cout << "Not Found\n";
+			}
+			else{
+				sort(mp3[temp].begin(), mp3[temp].end());
+				for(int i = 0; i < mp3[temp].size(); i++){
+					printf("%07d\n", mp3[temp][i]);
+				}
+			}
+		}
+		if(flag == 4){
+			if(mp4[temp].size() == 0){
+				cout << "Not Found\n";
+			}
+			else{
+				sort(mp4[temp].begin(), mp4[temp].end());
+				for(int i = 0; i < mp4[temp].size(); i++){
+					printf("%07d\n", mp4[temp][i]);
+				}
+			}
+		}
+		if(flag == 5){
+			if(mp5[temp].size() == 0){
+				cout << "Not Found\n";
+			}
+			else{
+				sort(mp5[temp].begin(), mp5[temp].end());
+				for(int i = 0; i < mp5[temp].size(); i++){
+					printf("%07d\n", mp5[temp][i]);
+				}
+			}
+		}
+	}
+	return 0;
+}
