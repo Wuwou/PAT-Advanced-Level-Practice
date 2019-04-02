@@ -1,0 +1,112 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+const int maxn = 510;
+const int INF = 999999999;
+int G[maxn][maxn] = { 0 }, dis[maxn];
+int c, n, e, m, s = 0, minneed = INF, minremain = INF;
+bool visited[maxn] = { false };
+vector<int> pre[maxn], weight;
+vector<int> temppath, path;
+
+void Dijkstra(int s) {
+    fill(dis, dis + maxn, INF);
+    dis[s] = 0;
+    for (int i = 0; i < n; i++) {
+        int min = INF, u = -1;
+        for (int j = 0; j <= n; j++) {
+            if (min > dis[j] && visited[j] == false) {
+                min = dis[j];
+                u = j;
+            }
+        }
+        if (u == -1) return;
+        visited[u] = true;
+        for (int j = 0; j <= n; j++) {
+            if (G[u][j] != INF && visited[j] == false) {
+                if (G[u][j] + dis[u] < dis[j]) {
+                    dis[j] = G[u][j] + dis[u];
+                    pre[j].clear();
+                    pre[j].push_back(u);
+                }
+                else if (G[u][j] + dis[u] == dis[j]) {
+                    pre[j].push_back(u);
+                }
+            }
+        }
+    }
+}
+
+void DFS(int e) {
+    if (e == s) {
+        temppath.push_back(e);
+        int need = 0, remain = 0;
+		for (int i = temppath.size() - 1; i >= 0; i--) {
+            int a = temppath[i];
+            if (weight[a] >= 0) {
+                remain += weight[a];
+            }
+            else {
+                if (remain >= abs(weight[a]))  remain -= abs(weight[a]);
+                else {
+                    need += abs(weight[a]) - remain;
+                    remain = 0;
+                }
+            }
+        }
+        if (need < minneed) {
+            minneed = need;
+            path = temppath;
+            minremain = remain;
+        }
+        else if (need == minneed && remain < minremain) {
+            minremain = remain;
+            path = temppath;
+        }
+        temppath.pop_back();
+        return;
+    }
+    temppath.push_back(e);
+    for (int i = 0; i < pre[e].size(); i++) {
+        int temp = pre[e][i];
+        DFS(temp);
+    }
+    temppath.pop_back();
+}
+
+int main() {
+    scanf("%d%d%d%d", &c, &n, &e, &m);
+	fill(G[0], G[0] + maxn * maxn, INF);
+    weight.resize(n + 1);
+    for (int i = 1; i <= n; i++) {
+        int temp;
+        scanf("%d", &temp);
+        weight[i] = temp - c / 2;
+    }
+    for (int i = 0; i < m; i++) {
+        int a, b, w;
+        scanf("%d%d%d", &a, &b, &w);
+        G[a][b] = G[b][a] = w;
+    }
+    Dijkstra(0);
+    DFS(e);
+    printf("%d ", minneed);
+    for (int i = path.size() - 1; i >= 0; i--) {
+        printf("%d", path[i]);
+        if (i != 0) printf("->");
+    }
+    printf(" %d\n", minremain);
+    return 0;
+}
