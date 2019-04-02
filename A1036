@@ -1,0 +1,65 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+struct node{
+	string name, id;
+	char sex;
+	int grade;
+	node(string name, string id, char sex, int grade){
+		this->name = name;
+		this->id = id;
+		this->sex = sex;
+		this->grade = grade;
+	}
+};
+vector<node> girl, boy;
+bool cmp(node a, node b){
+	return a.grade > b.grade;
+}
+int main(){
+	//freopen("input.txt", "r", stdin);
+	int n;
+	scanf("%d", &n);
+	for(int i = 0; i < n; i++){
+		getchar();
+		string s1, s2;
+		char c;
+		int grade;
+		cin >> s1 >> c >> s2 >> grade;
+		if(c == 'M')
+			boy.push_back(node(s1, s2,c,grade));
+		else
+			girl.push_back(node(s1, s2,c,grade));
+	}
+	int flag1 = 0;
+	if(girl.size() == 0) flag1 = 1;
+	else sort(girl.begin(), girl.end(), cmp);
+	int flag2 = 0;
+	if(boy.size() == 0) flag2 = 1;
+	else sort(boy.begin(), boy.end(), cmp);
+	if(flag1 == 1) printf("Absent\n");
+	else printf("%s %s\n", girl[0].name.c_str(), girl[0].id.c_str());
+	if(flag2 == 1) printf("Absent\n");
+	else 
+	{
+		int temp = boy.size() - 1;
+		printf("%s %s\n", boy[temp].name.c_str(), boy[temp].id.c_str());
+	}
+	if(flag1 == 0 && flag2 == 0){
+		printf("%d\n", girl[0].grade - boy[boy.size() - 1].grade);
+	}
+	else printf("NA\n");
+	return 0; 
+}
