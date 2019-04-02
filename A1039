@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+using namespace std;
+int n, k, num;
+unordered_map<string, vector<int>>mp;
+int main() {
+	scanf("%d%d", &n, &k);
+	for(int i = 0; i < k; i++){
+		int index;
+		scanf("%d%d", &index, &num);
+		getchar();
+		for(int j = 0; j < num; j++){
+			string s;
+			cin >> s;
+			mp[s].push_back(index);
+		}
+	}
+	for(int i = 0; i < n; i++){
+		string s;
+		cin >> s;
+		vector<int> ans;
+		cout << s << " " << mp[s].size();
+		if(mp[s].size() != 0){
+			for(auto it = mp[s].begin(); it != mp[s].end(); it++){
+				ans.push_back(*it);
+			}
+			sort(ans.begin(), ans.end());
+			for(int i = 0; i < ans.size(); i++){
+				printf(" %d", ans[i]);
+			}
+		}
+		cout << endl;
+	}
+	return 0;
+}
