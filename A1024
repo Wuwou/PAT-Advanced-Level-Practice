@@ -1,0 +1,48 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+using namespace std;
+bool Judge(string s){
+	int i = 0, j = s.length() - 1;
+	while(i <= j){
+		if(s[i] != s[j])  return false;
+		i++;
+		j--;
+	}
+	return true;
+}
+string Add(string s1, string s2){
+	string sum;
+	int cherry = 0;
+	reverse(s1.begin(), s1.end());
+	reverse(s2.begin(), s2.end());
+	for(int i = 0; i < s1.length(); i++){
+		int a = (s1[i] - '0') + (s2[i] - '0') + cherry;
+		cherry = a / 10;
+		a %= 10;
+		sum += a + '0';
+	}
+	if(cherry != 0)  sum += cherry + '0';
+	reverse(sum.begin(), sum.end());
+	return sum;
+}
+int main(){
+	string n;
+	int k, step = 0;
+	cin >> n >> k;
+	string sum = n;
+	while(Judge(sum) == false && step < k){
+		step++;
+		n = sum;
+		string temp = n;
+		reverse(temp.begin(), temp.end());
+		sum = Add(n, temp);
+	}
+	cout << sum << endl;
+	cout << step << endl;
+	return 0;
+}
