@@ -1,0 +1,32 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+using namespace std;
+int num[100] = {0} , size = 0;
+int main(){
+	int n, b;
+	scanf("%d%d", &n, &b);
+	while(n >= b){
+		num[size++] = n % b;
+		n /= b;
+	}
+	num[size] = n;
+	int k = size;
+	bool flag = true;
+	for(int i = 0; i < k; i++){
+		if(num[i] != num[k]) {
+			flag = false;
+			break;
+		}
+		k--;
+	}
+	if(flag == false) printf("No\n");
+	else printf("Yes\n");
+	for(int i = size; i >= 0; i--){
+		printf("%d", num[i]);
+		if(i != 0) printf(" ");
+	}
+	return 0;
+}
