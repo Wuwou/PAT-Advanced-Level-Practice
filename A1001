@@ -1,43 +1,32 @@
-#include <iostream>
 #include <cstdio>
-#include <string>
-#include <vector>
+#include <iostream>
 #include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
 using namespace std;
-int main() {
-	freopen("input.txt", "r", stdin);
-	string s1, s2;
-	cin >> s1 >> s2;
-	string s;
-	int a, b;
-	a = stoi(s1);
-	b = stoi(s2);
-	int temp = a + b;
-	if (temp < 0) {
-		printf("-");
+
+int main(){
+	long long  a, b, sum, k= 0;
+	scanf("%lld%lld", &a, &b);
+	sum = a + b;
+	bool flag = false;
+	string s = to_string(sum);
+	if(s[0] == '-') {flag = true; s.erase(0,1);}
+	string s2 = "";
+	for(int i = s.length() - 1; i >= 0; i--){
+		s2.insert(0,1,s[i]);
+		k++;
+		if(k % 3 == 0 && k != s.length())  s2.insert(0,1,',');
 	}
-	temp = abs(temp);
-	if (temp < 1000) {
-		printf("%d", temp);
-		return 0;
-	}
-	while (temp > 0) {
-		int k;
-		k = temp % 10;
-		char ch;
-		ch = k + '0';
-		temp = temp / 10;
-		s.push_back(ch);
-	}
-	int len = s.length();
-	int count = 0;
-	for (int i = len - 1; i >= 0; i--) {
-		cout << s[i];
-		count++;
-		if (count == 3 && i > 0) {
-			count = 0;
-			printf(",");
-		}
-	}
+	if(flag == true) s2.insert(0, 1, '-');
+	cout << s2 << endl;
 	return 0;
 }
