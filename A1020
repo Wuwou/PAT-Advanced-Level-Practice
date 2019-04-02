@@ -1,0 +1,74 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string> 
+#include <cstring>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <set>
+
+using namespace std;
+
+int n;
+vector<int> post, in, level;
+
+struct node{
+	int data;
+	node * left, *right;
+};
+node* newNode(int x){
+	node *temp = new node;
+	temp->data = x;
+	temp->left = temp->right = NULL;
+	return temp;
+}
+node* Create(int postL, int postR, int inL, int inR){
+	if(postL > postR || postL < 0 || postR > n-1){
+		return NULL;
+	}
+	if(postL == postR){
+		node *root = newNode(post[postL]);
+		return root;
+	}
+	node* root = newNode(post[postR]);
+	int mid = inL;
+	while(in[mid] != post[postR]) mid++;
+	root->left = Create(postL, postL + mid - inL -1, inL, mid - 1);
+	root->right = Create(postL + mid - inL, postR - 1, mid + 1, inR);
+	return root;
+}
+void BFS(node *root){
+	queue<node* > q;
+	q.push(root);
+	while(!q.empty()){
+		node *temp = q.front();
+		level.push_back(temp->data);
+		q.pop();
+		if(temp->left != NULL)  q.push(temp->left);
+		if(temp->right != NULL) q.push(temp->right);
+	}
+}
+int main(){
+	scanf("%d" ,&n);
+	post.resize(n);
+	in.resize(n);
+	for (int i = 0; i < n; i++){
+		scanf("%d",&post[i]);
+	}
+	for (int i = 0; i < n; i++){
+		scanf("%d",&in[i]);
+	}
+	node* root = NULL;
+	root = Create(0, n-1, 0, n-1);
+	BFS(root);
+	for(int i = 0; i < level.size(); i++){
+		if(i != 0) printf(" ");
+		printf("%d", level[i]);
+	}
+	printf("\n");
+	return 0;
+}
